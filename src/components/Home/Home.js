@@ -351,12 +351,18 @@ class Home extends Component {
           ],
         ],
       ],
-      location: ''
+      color: '',
+      taken: false,
+      col: null,
+      row: null,
+      newCol: null,
+      newRow: null
     }
 
     this.placeTile = this.placeTile.bind(this);
     this.createCompany = this.createCompany.bind(this);
     this.addToCompany = this.addToCompany.bind(this);
+    this.handleColor = this.handleColor.bind(this);
 
   }
 
@@ -369,10 +375,16 @@ class Home extends Component {
     let location = this.state.board;
     location[col][row][0].color = 'Taken'
     this.setState({
-       board: location
+      board: location,
+      col: col,
+      row: row
     })
     if (gameBoard[col+1][row][0].color === 'Taken') {
-      this.createCompany(col, row, colPlus, row)
+      this.setState({
+        newCol: colPlus,
+        newRow: row
+      })
+      // this.createCompany(col, row, colPlus, row)
     }
     if (gameBoard[col-1][row][0].color === 'Taken') {
       this.createCompany(col, row, colMinus, row)
@@ -397,33 +409,51 @@ class Home extends Component {
     }
   }
 
+  handleColor(e) {
+    console.log(e.target.value)
+    this.setState({
+      color: e.target.value
+    })
+  }
+
   createCompany(col, row, newCol, newRow) {
     let gameBoard = this.state.board;
     let location = this.state.board;
-    location[col][row][0].color = 'Blue'
+    location[col][row][0].color = this.state.color
     location[col][row][0].isCompany = true
-    location[newCol][newRow][0].color = 'Blue'
+    location[newCol][newRow][0].color = this.state.color
     location[newCol][newRow][0].isCompany = true
     this.setState({
-      board: location
+      board: location,
+      taken: true,
+      color: ''
     })
+    if
+  }
+
+  chooseCompany() {
+
   }
 
   addToCompany(col, row, newCol, newRow) {
     let gameBoard = this.state.board
     let currentCompany = gameBoard[newCol][newRow][0].color
     gameBoard[col][row][0].color = currentCompany
+    gameBoard[col][row][0].isCompany = true
     this.setState({
       board: gameBoard
     })
   }
 
   render() {
+    console.log(this.state)
     return (
       // <div className="home">
 
         <section className="mainView">
-        <header className="mainViewHeader">    
+        <header className="mainViewHeader"> 
+          <input style={{display: this.state.taken ? 'block' : 'none'}} value={this.state.color} type="text" onChange={this.handleColor}/>
+          <button style={{display: this.state.taken ? 'block' : 'none'}} onClick={ () => this.createCompany(this.state.col, this.state.row, this.state.newCol, this.state.newRow)}>create</button> 
 
         </header>
         <section className="gameGrid">
