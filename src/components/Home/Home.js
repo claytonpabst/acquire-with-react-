@@ -351,18 +351,21 @@ class Home extends Component {
           ],
         ],
       ],
-      color: '',
+      colorInput: '',
+      selectedCompany: '',
       taken: false,
       col: null,
       row: null,
       newCol: null,
-      newRow: null
+      newRow: null,
+      formToShow: 1
     }
 
     this.placeTile = this.placeTile.bind(this);
     this.createCompany = this.createCompany.bind(this);
     this.addToCompany = this.addToCompany.bind(this);
     this.handleColor = this.handleColor.bind(this);
+    this.updateSelectedCompany = this.updateSelectedCompany.bind(this);
 
   }
 
@@ -379,32 +382,48 @@ class Home extends Component {
       col: col,
       row: row
     })
-    if (gameBoard[col+1][row][0].color === 'Taken') {
+    if (col < 8 && gameBoard[col+1][row][0].color === 'Taken') {
       this.setState({
         newCol: colPlus,
-        newRow: row
+        newRow: row,
+        taken: true
       })
       // this.createCompany(col, row, colPlus, row)
     }
-    if (gameBoard[col-1][row][0].color === 'Taken') {
-      this.createCompany(col, row, colMinus, row)
+    if (col > 0 && gameBoard[col-1][row][0].color === 'Taken') {
+      this.setState({
+        newCol: colMinus,
+        newRow: row,
+        taken: true
+      })
+      // this.createCompany(col, row, colMinus, row)
     }
-    if (gameBoard[col][row+1][0].color === 'Taken') {
-      this.createCompany(col, row, col, rowPlus)
+    if (row < 11 && gameBoard[col][row+1][0].color === 'Taken') {
+      this.setState({
+        newCol: col,
+        newRow: rowPlus,
+        taken: true
+      })
+      // this.createCompany(col, row, col, rowPlus)
     }
-    if (gameBoard[col][row-1][0].color === 'Taken') {
-      this.createCompany(col, row, col, rowMinus)
+    if (row > 0 && gameBoard[col][row-1][0].color === 'Taken') {
+      this.setState({
+        newCol: col,
+        newRow: rowMinus,
+        taken: true
+      })
+      // this.createCompany(col, row, col, rowMinus)
     }
-    if (gameBoard[col+1][row][0].isCompany === true) {
+    if (col < 8 && gameBoard[col+1][row][0].isCompany === true) {
       this.addToCompany(col, row, colPlus, row)
     }
-    if (gameBoard[col-1][row][0].isCompany === true) {
+    if (col > 0 && gameBoard[col-1][row][0].isCompany === true) {
       this.addToCompany(col, row, colMinus, row)
     }
-    if (gameBoard[col][row+1][0].isCompany === true) {
+    if (row < 11 && gameBoard[col][row+1][0].isCompany === true) {
       this.addToCompany(col, row, col, rowPlus)
     }
-    if (gameBoard[col][row-1][0].isCompany === true) {
+    if (row > 0 && gameBoard[col][row-1][0].isCompany === true) {
       this.addToCompany(col, row, col, rowMinus)
     }
   }
@@ -412,27 +431,31 @@ class Home extends Component {
   handleColor(e) {
     console.log(e.target.value)
     this.setState({
-      color: e.target.value
+      colorInput: e.target.value
     })
   }
 
   createCompany(col, row, newCol, newRow) {
     let gameBoard = this.state.board;
     let location = this.state.board;
-    location[col][row][0].color = this.state.color
+    location[col][row][0].color = this.state.colorInput
     location[col][row][0].isCompany = true
-    location[newCol][newRow][0].color = this.state.color
+    location[newCol][newRow][0].color = this.state.colorInput
     location[newCol][newRow][0].isCompany = true
     this.setState({
       board: location,
-      taken: true,
-      color: ''
+      taken: false,
+      colorInput: '',
+      selectedCompany:''
     })
-    if
   }
 
-  chooseCompany() {
-
+  updateSelectedCompany(val) {
+    this.setState({
+      selectedCompany: val,
+      colorInput: val
+    })
+    
   }
 
   addToCompany(col, row, newCol, newRow) {
@@ -452,9 +475,17 @@ class Home extends Component {
 
         <section className="mainView">
         <header className="mainViewHeader"> 
-          <input style={{display: this.state.taken ? 'block' : 'none'}} value={this.state.color} type="text" onChange={this.handleColor}/>
-          <button style={{display: this.state.taken ? 'block' : 'none'}} onClick={ () => this.createCompany(this.state.col, this.state.row, this.state.newCol, this.state.newRow)}>create</button> 
-
+          <select id='companySelect' value={this.state.selectedCompany} style={{display: this.state.taken ? 'block' : 'none'}} onChange={(e) => this.updateSelectedCompany(e.target.value)}>
+            <option value=''>Select a company</option>
+            <option value="Blue">Hamilton Hotel</option>
+            <option value="Red">Rolling Railroad</option>
+          </select>
+          <button style={{display: this.state.colorInput !== '' ? 'block' : 'none'}} 
+                  onClick={ () => this.createCompany(this.state.col, 
+                                                    this.state.row, 
+                                                    this.state.newCol, 
+                                                    this.state.newRow)}>create
+          </button>
         </header>
         <section className="gameGrid">
             <section className="gameGridInner">
