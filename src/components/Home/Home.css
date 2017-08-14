@@ -1,7 +1,95 @@
 
-.home{
+/*.home{
     width: 100%;
     position: relative;
+    background: pink;
+}*/
+
+.mainView {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    background: pink;
 }
 
+.mainViewHeader {
+    width: 35vw;
+    height: 100vh;
+    background: blue;
+    border: .5px solid black;
+}
 
+.gameGrid {
+    width: 65vw;
+    height: 100vh;
+    background: lightblue;
+    display: flex;
+    position: relative;
+    border: .5px solid black;
+}
+
+.gameGridInner {
+    position: absolute;
+    width: 90%;
+    height: 70%;
+    top: 5%;
+    left: 5%;
+    background: orange;
+    /*margin: auto;*/
+    display: flex;
+    flex-direction: column;
+    border: .5px solid black;
+}
+
+.gameRow {
+    height: 11.11%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background: gray;
+}
+
+.gameColumn {
+    height: 100%;
+    width: 8.33%;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    border: .5px solid gray;
+    display: flex;
+    font-size: 12px;
+    font-weight: 700;
+    opacity: .9;
+}
+
+.gameColumnclear {
+    height: 100%;
+    width: 8.33%;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    border: .5px solid gray;
+    display: flex;
+    font-size: 12px;
+    font-weight: 700;
+    opacity: .5;
+}
+
+.gameColumnclear:hover {
+    opacity: .7;
+}
+
+.gameColumntaken {
+    height: 100%;
+    width: 8.33%;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    border: .5px solid gray;
+    display: flex;
+    font-size: 12px;
+    font-weight: 700;
+    opacity: .9;
+}
