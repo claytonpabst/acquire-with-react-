@@ -16,7 +16,7 @@
 .mainViewHeader {
     width: 35vw;
     height: 100vh;
-    background: blue;
+    background: #159293;
     border: .5px solid black;
 }
 
@@ -81,12 +81,25 @@
     opacity: .7;
 }
 
-.gameColumntaken {
+.gameColumnTaken {
     height: 100%;
     width: 8.33%;
     justify-content: center;
     align-items: center;
     background: white;
+    border: .5px solid gray;
+    display: flex;
+    font-size: 12px;
+    font-weight: 700;
+    opacity: .9;
+}
+
+.gameColumnBlue {
+    height: 100%;
+    width: 8.33%;
+    justify-content: center;
+    align-items: center;
+    background: blue;
     border: .5px solid gray;
     display: flex;
     font-size: 12px;
