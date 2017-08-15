@@ -358,7 +358,8 @@ class Home extends Component {
       row: null,
       newCol: null,
       newRow: null,
-      companySelectZIndex: 1
+      companySelectZIndex: 1,
+      mergerStips: []
     }
 
     this.placeTile = this.placeTile.bind(this);
@@ -367,6 +368,7 @@ class Home extends Component {
     this.handleColor = this.handleColor.bind(this);
     this.updateSelectedCompany = this.updateSelectedCompany.bind(this);
     this.checkForLooseTiles = this.checkForLooseTiles.bind(this);
+    this.checkForMerger = this.checkForMerger.bind(this);
 
   }
 
@@ -456,6 +458,7 @@ class Home extends Component {
       companySelectZIndex: 1
     })
     this.checkForLooseTiles(col, row)
+    this.checkForMerger(col, row)
   }
 
   updateSelectedCompany(val) {
@@ -475,6 +478,9 @@ class Home extends Component {
       board: gameBoard
     })
     this.checkForLooseTiles(col, row)
+    // if (this.checkForMerger(col, row)) {
+    //   this.merge()
+    // }
   }
 
   checkForLooseTiles(col, row) {
@@ -509,6 +515,83 @@ class Home extends Component {
       })
     }
   }
+
+  checkForMerger(col, row) {
+    function isValidCell(color) {
+      return color !== 'Taken' && color !== 'clear';
+    }
+    const mergerArr = []
+    // console.log(col, row)
+    let gameBoard = this.state.board
+    if (col < 8) {
+      let color = gameBoard[col+1][row][0].color
+      if (isValidCell(color)) {
+        mergerArr.push(color)
+      }
+    }
+    if (col > 0) {
+      let color = gameBoard[col-1][row][0].color
+      if (isValidCell(color)) {
+        mergerArr.push(color)
+      }
+    }
+    if (row < 11) {
+      let color = gameBoard[col][row+1][0].color
+      if (isValidCell(color)) {
+        mergerArr.push(color)
+      }
+    }
+    if (row > 0) {
+      let color = gameBoard[col][row-1][0].color
+      if (isValidCell(color)) {
+        mergerArr.push(color)
+      }
+    }
+    let unique = new Set(mergerArr)
+    return unique.length > 1
+  }
+
+  // merge(col, row) {
+  //   let gameBoard = this.state.board
+  //   const cells = []
+    
+  //   function isValidCell(col, row) {
+  //     let color = gameBoard[col][row][0].color
+  //     return color !== 'Taken' && color !== 'clear' && cells.indexOf([col,row])
+  //   }
+
+    
+  //   const checkAdjacentCells = (col, row) => {
+
+  //     let neighbors = [
+  //     ]
+
+  //     if (col < 8) {
+        
+  //       if (isValidCell(col+1, row)) {
+  //         neighbors.push([col+1,row])
+  //       }
+  //     }
+  //     if (col > 0) {
+  //       let color = gameBoard[col-1][row][0].color
+  //       if (isValidCell(color)) {
+  //         neighbors.push([col-1,row])
+  //       }
+  //     }
+  //     if (row < 8) {
+  //       let color = gameBoard[col][row+1][0].color
+  //       if (isValidCell(color)) {
+  //         neighbors.push([col,row+1])
+  //       }
+  //     }
+  //     if (col > 0) {
+  //       let color = gameBoard[col][row-1][0].color
+  //       if (isValidCell(color)) {
+  //         neighbors.push([col,row-1])
+  //       }
+  //     }
+  //   }
+  // }
 
   render() {
     console.log(this.state)
