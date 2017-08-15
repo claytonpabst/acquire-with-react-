@@ -358,7 +358,6 @@ class Home extends Component {
       row: null,
       newCol: null,
       newRow: null,
-      formToShow: 1,
       companySelectZIndex: 1
     }
 
@@ -367,6 +366,7 @@ class Home extends Component {
     this.addToCompany = this.addToCompany.bind(this);
     this.handleColor = this.handleColor.bind(this);
     this.updateSelectedCompany = this.updateSelectedCompany.bind(this);
+    this.checkForLooseTiles = this.checkForLooseTiles.bind(this);
 
   }
 
@@ -383,6 +383,22 @@ class Home extends Component {
       col: col,
       row: row
     })
+    if (col < 8 && gameBoard[col+1][row][0].isCompany === true) {
+      this.addToCompany(col, row, colPlus, row)
+      return
+    }
+    if (col > 0 && gameBoard[col-1][row][0].isCompany === true) {
+      this.addToCompany(col, row, colMinus, row)
+      return
+    }
+    if (row < 11 && gameBoard[col][row+1][0].isCompany === true) {
+      this.addToCompany(col, row, col, rowPlus)
+      return
+    }
+    if (row > 0 && gameBoard[col][row-1][0].isCompany === true) {
+      this.addToCompany(col, row, col, rowMinus)
+      return
+    }
     if (col < 8 && gameBoard[col+1][row][0].color === 'Taken') {
       this.setState({
         newCol: colPlus,
@@ -399,7 +415,6 @@ class Home extends Component {
         taken: true,
         companySelectZIndex: 3
       })
-      // this.createCompany(col, row, colMinus, row)
     }
     if (row < 11 && gameBoard[col][row+1][0].color === 'Taken') {
       this.setState({
@@ -408,7 +423,6 @@ class Home extends Component {
         taken: true,
         companySelectZIndex: 3
       })
-      // this.createCompany(col, row, col, rowPlus)
     }
     if (row > 0 && gameBoard[col][row-1][0].color === 'Taken') {
       this.setState({
@@ -417,24 +431,11 @@ class Home extends Component {
         taken: true,
         companySelectZIndex: 3
       })
-      // this.createCompany(col, row, col, rowMinus)
-    }
-    if (col < 8 && gameBoard[col+1][row][0].isCompany === true) {
-      this.addToCompany(col, row, colPlus, row)
-    }
-    if (col > 0 && gameBoard[col-1][row][0].isCompany === true) {
-      this.addToCompany(col, row, colMinus, row)
-    }
-    if (row < 11 && gameBoard[col][row+1][0].isCompany === true) {
-      this.addToCompany(col, row, col, rowPlus)
-    }
-    if (row > 0 && gameBoard[col][row-1][0].isCompany === true) {
-      this.addToCompany(col, row, col, rowMinus)
     }
   }
 
   handleColor(e) {
-    console.log(e.target.value)
+    // console.log(e.target.value)
     this.setState({
       colorInput: e.target.value
     })
@@ -454,6 +455,7 @@ class Home extends Component {
       selectedCompany: '',
       companySelectZIndex: 1
     })
+    this.checkForLooseTiles(col, row)
   }
 
   updateSelectedCompany(val) {
@@ -472,6 +474,40 @@ class Home extends Component {
     this.setState({
       board: gameBoard
     })
+    this.checkForLooseTiles(col, row)
+  }
+
+  checkForLooseTiles(col, row) {
+    console.log(col, row)
+    let gameBoard = this.state.board
+    if (col < 8 && gameBoard[col+1][row][0].color === 'Taken') {
+      gameBoard[col+1][row][0].color = gameBoard[col][row][0].color
+      gameBoard[col+1][row][0].isCompany = true
+      this.setState({
+        board: gameBoard
+      })
+    }
+    if (col > 0 && gameBoard[col-1][row][0].color === 'Taken') {
+      gameBoard[col-1][row][0].color = gameBoard[col][row][0].color
+      gameBoard[col-1][row][0].isCompany = true
+      this.setState({
+        board: gameBoard
+      })
+    }
+    if (row < 11 && gameBoard[col][row+1][0].color === 'Taken') {
+      gameBoard[col][row+1][0].color = gameBoard[col][row][0].color
+      gameBoard[col][row+1][0].isCompany = true
+      this.setState({
+        board: gameBoard
+      })
+    }
+    if (row > 0 && gameBoard[col][row-1][0].color === 'Taken') {
+      gameBoard[col][row-1][0].color = gameBoard[col][row][0].color
+      gameBoard[col][row-1][0].isCompany = true
+      this.setState({
+        board: gameBoard
+      })
+    }
   }
 
   render() {
