@@ -367,7 +367,9 @@ class Home extends Component {
       sizeGreen: 0,
       sizeTeal: 0,
       sizePurple: 0,
-      companiesToMerge: []
+      companiesToMerge: [],
+      timeToMerge: false,
+      mergeZIndex: 1
     }
 
     this.placeTile = this.placeTile.bind(this);
@@ -396,7 +398,8 @@ class Home extends Component {
     })
     if (this.checkForMerger(col, row)) {
       // console.log('merge function almost hit')
-      this.merge(col, row)
+      // this.merge(col, row)
+      return
     } else {
       if (col < 8 && gameBoard[col+1][row][0].isCompany === true) {
         this.addToCompany(col, row, colPlus, row)
@@ -615,16 +618,32 @@ class Home extends Component {
         unique.push(mergerArr[i])
       }
     }
-    this.setState({
-      companiesToMerge: unique
-    })
+    if (unique.length > 1){
+      this.setState({
+        companiesToMerge: unique,
+        timeToMerge: true,
+        mergeZIndex: 3
+      })
+    }
+    // this.setState((prevState, props) => {
+    //   return {companiesToMerge: unique};
+    // });
     // console.log(unique.length)
     return unique.length > 1
   }
 
   merge(col, row) {
-    // console.log('should merge 2')
-    
+    let companiesToMerge = []
+    for (let i = 0; i < this.state.companiesToMerge.length; i++) {
+      console.log()
+      let color = this.state.companiesToMerge[i]
+      let size = this.state[`size${color}`]
+      companiesToMerge.push([color, size])
+    }
+    console.log(companiesToMerge)
+    this.setState({
+      mergeZIndex: 1
+    })
   }
 
   // merge(col, row) {
@@ -695,6 +714,25 @@ class Home extends Component {
             </select>
             <button style={{display: this.state.colorInput !== '' ? 'block' : 'none'}} 
                     onClick={ () => this.createCompany(this.state.col, this.state.row, this.state.newCol, this.state.newRow)}>create
+            </button>
+          </section>
+
+          <section className='mergeSelect' style={{zIndex: this.state.mergeZIndex}}>
+            time to merge!
+            <select id='companySelect' 
+                    value={this.state.selectedCompany} 
+                    style={{display: this.state.taken ? 'block' : 'none'}} 
+                    onChange={(e) => this.updateSelectedCompany(e.target.value)}>
+              <option value=''>Select a company</option>
+              <option value="Blue">Facecrook</option>
+              <option value="Red">Union Atlantic Railroad</option>
+              <option value='Orange'>Crump Tower Inc.</option>
+              <option value='Yellow'>Booze Cruise Inc.</option>
+              <option value='Purple'>Chevwrong Oil</option>
+              <option value='Green'>Hamilton Hotels</option>
+              <option value='Teal'>Outel</option>
+            </select>
+            <button onClick={ () => this.merge(this.state.col, this.state.row)}>create
             </button>
           </section>
 

@@ -57,6 +57,20 @@
     z-index: 3;
 }
 
+.mergeSelect {
+    position: absolute;
+    width: 90%;
+    height: 70%;
+    top: 5%;
+    left: 5%;
+    background: orange;
+    /*margin: auto;*/
+    display: flex;
+    flex-direction: column;
+    border: .5px solid black;
+    z-index: 3;
+}
+
 .gameRow {
     height: 11.11%;
     width: 100%;
