@@ -359,7 +359,15 @@ class Home extends Component {
       newCol: null,
       newRow: null,
       companySelectZIndex: 1,
-      mergerStips: []
+      mergerStips: [],
+      sizeBlue: 0,
+      sizeRed: 0,
+      sizeYellow: 0,
+      sizeOrange: 0,
+      sizeGreen: 0,
+      sizeTeal: 0,
+      sizePurple: 0,
+      companiesToMerge: []
     }
 
     this.placeTile = this.placeTile.bind(this);
@@ -369,6 +377,7 @@ class Home extends Component {
     this.updateSelectedCompany = this.updateSelectedCompany.bind(this);
     this.checkForLooseTiles = this.checkForLooseTiles.bind(this);
     this.checkForMerger = this.checkForMerger.bind(this);
+    this.updateCompanySize = this.updateCompanySize.bind(this);
 
   }
 
@@ -385,55 +394,60 @@ class Home extends Component {
       col: col,
       row: row
     })
-    if (col < 8 && gameBoard[col+1][row][0].isCompany === true) {
-      this.addToCompany(col, row, colPlus, row)
-      return
-    }
-    if (col > 0 && gameBoard[col-1][row][0].isCompany === true) {
-      this.addToCompany(col, row, colMinus, row)
-      return
-    }
-    if (row < 11 && gameBoard[col][row+1][0].isCompany === true) {
-      this.addToCompany(col, row, col, rowPlus)
-      return
-    }
-    if (row > 0 && gameBoard[col][row-1][0].isCompany === true) {
-      this.addToCompany(col, row, col, rowMinus)
-      return
-    }
-    if (col < 8 && gameBoard[col+1][row][0].color === 'Taken') {
-      this.setState({
-        newCol: colPlus,
-        newRow: row,
-        taken: true,
-        companySelectZIndex: 3
-      })
-      // this.createCompany(col, row, colPlus, row)
-    }
-    if (col > 0 && gameBoard[col-1][row][0].color === 'Taken') {
-      this.setState({
-        newCol: colMinus,
-        newRow: row,
-        taken: true,
-        companySelectZIndex: 3
-      })
-    }
-    if (row < 11 && gameBoard[col][row+1][0].color === 'Taken') {
-      this.setState({
-        newCol: col,
-        newRow: rowPlus,
-        taken: true,
-        companySelectZIndex: 3
-      })
-    }
-    if (row > 0 && gameBoard[col][row-1][0].color === 'Taken') {
-      this.setState({
-        newCol: col,
-        newRow: rowMinus,
-        taken: true,
-        companySelectZIndex: 3
-      })
-    }
+    if (this.checkForMerger(col, row)) {
+      // console.log('merge function almost hit')
+      this.merge(col, row)
+    } else {
+      if (col < 8 && gameBoard[col+1][row][0].isCompany === true) {
+        this.addToCompany(col, row, colPlus, row)
+        return
+      }
+      if (col > 0 && gameBoard[col-1][row][0].isCompany === true) {
+        this.addToCompany(col, row, colMinus, row)
+        return
+      }
+      if (row < 11 && gameBoard[col][row+1][0].isCompany === true) {
+        this.addToCompany(col, row, col, rowPlus)
+        return
+      }
+      if (row > 0 && gameBoard[col][row-1][0].isCompany === true) {
+        this.addToCompany(col, row, col, rowMinus)
+        return
+      }
+      if (col < 8 && gameBoard[col+1][row][0].color === 'Taken') {
+        this.setState({
+          newCol: colPlus,
+          newRow: row,
+          taken: true,
+          companySelectZIndex: 3
+        })
+        // this.createCompany(col, row, colPlus, row)
+      }
+      if (col > 0 && gameBoard[col-1][row][0].color === 'Taken') {
+        this.setState({
+          newCol: colMinus,
+          newRow: row,
+          taken: true,
+          companySelectZIndex: 3
+        })
+      }
+      if (row < 11 && gameBoard[col][row+1][0].color === 'Taken') {
+        this.setState({
+          newCol: col,
+          newRow: rowPlus,
+          taken: true,
+          companySelectZIndex: 3
+        })
+      }
+      if (row > 0 && gameBoard[col][row-1][0].color === 'Taken') {
+        this.setState({
+          newCol: col,
+          newRow: rowMinus,
+          taken: true,
+          companySelectZIndex: 3
+        })
+      }
+    }  
   }
 
   handleColor(e) {
@@ -457,8 +471,9 @@ class Home extends Component {
       selectedCompany: '',
       companySelectZIndex: 1
     })
-    this.checkForLooseTiles(col, row)
-    this.checkForMerger(col, row)
+    this.checkForLooseTiles(col, row, 2)
+    // this.updateCompanySize(location[col][row][0].color, 2)
+    // this.checkForMerger(col, row)
   }
 
   updateSelectedCompany(val) {
@@ -469,6 +484,45 @@ class Home extends Component {
     
   }
 
+  updateCompanySize(currentCompany, num) {
+    console.log(currentCompany, num)
+    if (currentCompany === 'Blue') {
+      this.setState({
+        sizeBlue: this.state.sizeBlue + num
+      })
+    }
+    if (currentCompany === 'Red') {
+      this.setState({
+        sizeRed: this.state.sizeRed + num
+      })
+    }
+    if (currentCompany === 'Yellow') {
+      this.setState({
+        sizeYellow: this.state.sizeYellow + num
+      })
+    }
+    if (currentCompany === 'Green') {
+      this.setState({
+        sizeGreen: this.state.sizeGreen + num
+      })
+    }
+    if (currentCompany === 'Orange') {
+      this.setState({
+        sizeOrange: this.state.sizeOrange + num
+      })
+    }
+    if (currentCompany === 'Purple') {
+      this.setState({
+        sizePurple: this.state.sizePurple + num
+      })
+    }
+    if (currentCompany === 'Teal') {
+      this.setState({
+        sizeTeal: this.state.sizeTeal + num
+      })
+    }
+  }
+
   addToCompany(col, row, newCol, newRow) {
     let gameBoard = this.state.board
     let currentCompany = gameBoard[newCol][newRow][0].color
@@ -477,14 +531,15 @@ class Home extends Component {
     this.setState({
       board: gameBoard
     })
-    this.checkForLooseTiles(col, row)
+    this.checkForLooseTiles(col, row, 1)
+    // this.updateCompanySize(currentCompany, 1)
     // if (this.checkForMerger(col, row)) {
     //   this.merge()
     // }
   }
 
-  checkForLooseTiles(col, row) {
-    console.log(col, row)
+  checkForLooseTiles(col, row, count) {
+    // console.log(col, row)
     let gameBoard = this.state.board
     if (col < 8 && gameBoard[col+1][row][0].color === 'Taken') {
       gameBoard[col+1][row][0].color = gameBoard[col][row][0].color
@@ -492,6 +547,7 @@ class Home extends Component {
       this.setState({
         board: gameBoard
       })
+      count ++
     }
     if (col > 0 && gameBoard[col-1][row][0].color === 'Taken') {
       gameBoard[col-1][row][0].color = gameBoard[col][row][0].color
@@ -499,6 +555,7 @@ class Home extends Component {
       this.setState({
         board: gameBoard
       })
+      count ++
     }
     if (row < 11 && gameBoard[col][row+1][0].color === 'Taken') {
       gameBoard[col][row+1][0].color = gameBoard[col][row][0].color
@@ -506,6 +563,7 @@ class Home extends Component {
       this.setState({
         board: gameBoard
       })
+      count ++
     }
     if (row > 0 && gameBoard[col][row-1][0].color === 'Taken') {
       gameBoard[col][row-1][0].color = gameBoard[col][row][0].color
@@ -513,10 +571,14 @@ class Home extends Component {
       this.setState({
         board: gameBoard
       })
+      count ++
     }
+    this.updateCompanySize(gameBoard[col][row][0].color, count)
   }
 
   checkForMerger(col, row) {
+    let unique = [];
+    // console.log('should merge')
     function isValidCell(color) {
       return color !== 'Taken' && color !== 'clear';
     }
@@ -547,8 +609,22 @@ class Home extends Component {
         mergerArr.push(color)
       }
     }
-    let unique = new Set(mergerArr)
+    // let unique = new Set(mergerArr)
+    for (let i = 0; i < mergerArr.length; i++) {
+      if (!unique.includes(mergerArr[i])) {
+        unique.push(mergerArr[i])
+      }
+    }
+    this.setState({
+      companiesToMerge: unique
+    })
+    // console.log(unique.length)
     return unique.length > 1
+  }
+
+  merge(col, row) {
+    // console.log('should merge 2')
+    
   }
 
   // merge(col, row) {
