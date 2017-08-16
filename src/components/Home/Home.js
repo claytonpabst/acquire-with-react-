@@ -640,11 +640,26 @@ class Home extends Component {
       let size = this.state[`size${color}`]
       companiesToMerge.push([color, size])
     }
-    console.log(companiesToMerge)
-    this.setState({
-      mergeZIndex: 1
+    // console.log(companiesToMerge)
+    companiesToMerge.sort((a,b) => {
+      return b[1] - a[1]
     })
+    // console.log(companiesToMerge)
+    this.setState({
+      mergeZIndex: 1,
+      timeToMerge: false,
+      companiesToMerge: companiesToMerge
+    })
+    if (companiesToMerge.length === 2) {
+      this.merge2()
+    } if (companiesToMerge === 3) {
+      this.merge3()
+    } if (companiesToMerge === 4) {
+      this.merge4()
+    }
   }
+
+  merge
 
   // merge(col, row) {
   //   let gameBoard = this.state.board
@@ -719,19 +734,6 @@ class Home extends Component {
 
           <section className='mergeSelect' style={{zIndex: this.state.mergeZIndex}}>
             time to merge!
-            <select id='companySelect' 
-                    value={this.state.selectedCompany} 
-                    style={{display: this.state.taken ? 'block' : 'none'}} 
-                    onChange={(e) => this.updateSelectedCompany(e.target.value)}>
-              <option value=''>Select a company</option>
-              <option value="Blue">Facecrook</option>
-              <option value="Red">Union Atlantic Railroad</option>
-              <option value='Orange'>Crump Tower Inc.</option>
-              <option value='Yellow'>Booze Cruise Inc.</option>
-              <option value='Purple'>Chevwrong Oil</option>
-              <option value='Green'>Hamilton Hotels</option>
-              <option value='Teal'>Outel</option>
-            </select>
             <button onClick={ () => this.merge(this.state.col, this.state.row)}>create
             </button>
           </section>
