@@ -351,6 +351,24 @@ class Home extends Component {
           ],
         ],
       ],
+      availableTiles: [
+        [0,0], [0,1], [0,2], [0,3], [0,4], [0,5], [0,6], [0,7], [0,8], [0,9], [0,10], [0,11],
+        [1,0], [1,1], [1,2], [1,3], [1,4], [1,5], [1,6], [1,7], [1,8], [1,9], [1,10], [1,11],
+        [2,0], [2,1], [2,2], [2,3], [2,4], [2,5], [2,6], [2,7], [2,8], [2,9], [2,10], [2,11],
+        [3,0], [3,1], [3,2], [3,3], [3,4], [3,5], [3,6], [3,7], [3,8], [3,9], [3,10], [3,11],
+        [4,0], [4,1], [4,2], [4,3], [4,4], [4,5], [4,6], [4,7], [4,8], [4,9], [4,10], [4,11],
+        [5,0], [5,1], [5,2], [5,3], [5,4], [5,5], [5,6], [5,7], [5,8], [5,9], [5,10], [5,11],
+        [6,0], [6,1], [6,2], [6,3], [6,4], [6,5], [6,6], [6,7], [6,8], [6,9], [6,10], [6,11],
+        [7,0], [7,1], [7,2], [7,3], [7,4], [7,5], [7,6], [7,7], [7,8], [7,9], [7,10], [7,11],
+        [8,0], [8,1], [8,2], [8,3], [8,4], [8,5], [8,6], [8,7], [8,8], [8,9], [8,10], [8,11]
+        ],
+      playerTiles: [],
+      tileOneName: '',
+      tileTwoName: '',
+      tileThreeName: '',
+      tileFourName: '',
+      tileFiveName: '',
+      tileSixName: '',
       colorInput: '',
       selectedCompany: '',
       taken: false,
@@ -380,7 +398,42 @@ class Home extends Component {
     this.checkForLooseTiles = this.checkForLooseTiles.bind(this);
     this.checkForMerger = this.checkForMerger.bind(this);
     this.updateCompanySize = this.updateCompanySize.bind(this);
+    this.resetCompanySize = this.resetCompanySize.bind(this);
+    this.merge = this.merge.bind(this);
+    this.merge2 = this.merge2.bind(this);
+    this.merge3 = this.merge3.bind(this);
+    this.merge4 = this.merge4.bind(this);
+    this.getRandomTile = this.getRandomTile.bind(this);
+  }
 
+  
+  getRandomTile() {
+    let availableTiles = this.state.availableTiles
+    let playerTiles = this.state.playerTiles
+    for (let i = playerTiles.length; i < 6; i++) {
+      const min = 0
+      const max = this.state.availableTiles.length
+      let randomIndex = Math.floor(Math.random() * (max - min)) + min;
+      playerTiles.push(availableTiles[randomIndex])
+      availableTiles.splice(randomIndex, 1)
+    }
+    let letters = ['A','B','C','D','E','F','G','H','I']
+    let tileOneName = letters[playerTiles[0][0]] + (playerTiles[0][1] + 1)
+    let tileTwoName = letters[playerTiles[1][0]] + (playerTiles[1][1] +1)
+    let tileThreeName = letters[playerTiles[2][0]] + (playerTiles[2][1] +1)
+    let tileFourName = letters[playerTiles[3][0]] + (playerTiles[3][1] +1)
+    let tileFiveName = letters[playerTiles[4][0]] + (playerTiles[4][1] +1)
+    let tileSixName = letters[playerTiles[5][0]] + (playerTiles[5][1] +1)
+    this.setState({
+      availableTiles: availableTiles,
+      playerTiles: playerTiles,
+      tileOneName: tileOneName,
+      tileTwoName: tileTwoName,
+      tileThreeName: tileThreeName,
+      tileFourName: tileFourName,
+      tileFiveName: tileFiveName,
+      tileSixName: tileSixName
+    })
   }
 
   placeTile(col, row) {
@@ -390,15 +443,17 @@ class Home extends Component {
     let colMinus = col - 1;
     let gameBoard = this.state.board;
     let location = this.state.board;
-    location[col][row][0].color = 'Taken'
-    this.setState({
-      board: location,
-      col: col,
-      row: row
-    })
+    if (this.state.board[col][row][0].color === 'clear') {
+      location[col][row][0].color = 'Taken'
+      this.setState({
+        board: location,
+        col: col,
+        row: row
+      })
+    } else {
+      alert('Click an available location where you have the corresponding tile to place your tile.')
+    }
     if (this.checkForMerger(col, row)) {
-      // console.log('merge function almost hit')
-      // this.merge(col, row)
       return
     } else {
       if (col < 8 && gameBoard[col+1][row][0].isCompany === true) {
@@ -424,7 +479,6 @@ class Home extends Component {
           taken: true,
           companySelectZIndex: 3
         })
-        // this.createCompany(col, row, colPlus, row)
       }
       if (col > 0 && gameBoard[col-1][row][0].color === 'Taken') {
         this.setState({
@@ -454,7 +508,6 @@ class Home extends Component {
   }
 
   handleColor(e) {
-    // console.log(e.target.value)
     this.setState({
       colorInput: e.target.value
     })
@@ -475,8 +528,6 @@ class Home extends Component {
       companySelectZIndex: 1
     })
     this.checkForLooseTiles(col, row, 2)
-    // this.updateCompanySize(location[col][row][0].color, 2)
-    // this.checkForMerger(col, row)
   }
 
   updateSelectedCompany(val) {
@@ -488,7 +539,46 @@ class Home extends Component {
   }
 
   updateCompanySize(currentCompany, num) {
-    console.log(currentCompany, num)
+    // console.log(currentCompany, num)
+    if (currentCompany === 'Blue') {
+      this.setState({
+        sizeBlue: this.state.sizeBlue + num
+      })
+    }
+    if (currentCompany === 'Red') {
+      this.setState({
+        sizeRed: this.state.sizeRed + num
+      })
+    }
+    if (currentCompany === 'Yellow') {
+      this.setState({
+        sizeYellow: this.state.sizeYellow + num
+      })
+    }
+    if (currentCompany === 'Green') {
+      this.setState({
+        sizeGreen: this.state.sizeGreen + num
+      })
+    }
+    if (currentCompany === 'Orange') {
+      this.setState({
+        sizeOrange: this.state.sizeOrange + num
+      })
+    }
+    if (currentCompany === 'Purple') {
+      this.setState({
+        sizePurple: this.state.sizePurple + num
+      })
+    }
+    if (currentCompany === 'Teal') {
+      this.setState({
+        sizeTeal: this.state.sizeTeal + num
+      })
+    }
+  }
+
+  resetCompanySize(currentCompany, num) {
+    // console.log(currentCompany, num)
     if (currentCompany === 'Blue') {
       this.setState({
         sizeBlue: this.state.sizeBlue + num
@@ -535,14 +625,9 @@ class Home extends Component {
       board: gameBoard
     })
     this.checkForLooseTiles(col, row, 1)
-    // this.updateCompanySize(currentCompany, 1)
-    // if (this.checkForMerger(col, row)) {
-    //   this.merge()
-    // }
   }
 
   checkForLooseTiles(col, row, count) {
-    // console.log(col, row)
     let gameBoard = this.state.board
     if (col < 8 && gameBoard[col+1][row][0].color === 'Taken') {
       gameBoard[col+1][row][0].color = gameBoard[col][row][0].color
@@ -581,13 +666,13 @@ class Home extends Component {
 
   checkForMerger(col, row) {
     let unique = [];
-    // console.log('should merge')
+    const mergerArr = []
+    let gameBoard = this.state.board
+
     function isValidCell(color) {
       return color !== 'Taken' && color !== 'clear';
     }
-    const mergerArr = []
-    // console.log(col, row)
-    let gameBoard = this.state.board
+    
     if (col < 8) {
       let color = gameBoard[col+1][row][0].color
       if (isValidCell(color)) {
@@ -612,7 +697,7 @@ class Home extends Component {
         mergerArr.push(color)
       }
     }
-    // let unique = new Set(mergerArr)
+
     for (let i = 0; i < mergerArr.length; i++) {
       if (!unique.includes(mergerArr[i])) {
         unique.push(mergerArr[i])
@@ -625,10 +710,6 @@ class Home extends Component {
         mergeZIndex: 3
       })
     }
-    // this.setState((prevState, props) => {
-    //   return {companiesToMerge: unique};
-    // });
-    // console.log(unique.length)
     return unique.length > 1
   }
 
@@ -640,26 +721,58 @@ class Home extends Component {
       let size = this.state[`size${color}`]
       companiesToMerge.push([color, size])
     }
-    // console.log(companiesToMerge)
     companiesToMerge.sort((a,b) => {
       return b[1] - a[1]
     })
-    // console.log(companiesToMerge)
     this.setState({
       mergeZIndex: 1,
       timeToMerge: false,
       companiesToMerge: companiesToMerge
+    }, () => {
+      if (companiesToMerge.length === 2) {
+        this.merge2()
+      } if (companiesToMerge.length === 3) {
+        this.merge3()
+      } if (companiesToMerge.length === 4) {
+        this.merge4()
+      }
     })
-    if (companiesToMerge.length === 2) {
-      this.merge2()
-    } if (companiesToMerge === 3) {
-      this.merge3()
-    } if (companiesToMerge === 4) {
-      this.merge4()
-    }
   }
 
-  merge
+  merge2() {
+    console.log('merge2 hit')
+    let gameBoard = this.state.board;
+    let companyToTakeMerger = this.state.companiesToMerge[0][0];
+    let companyToTakeMergerSize = 0
+    let companyToBeTaken = this.state.companiesToMerge[1][0];
+    let companyToBeTakenSize = 0;
+    for (let i = 0; i < this.state.board.length; i++) {
+      for (let j = 0; j < this.state.board[i].length; j++) {
+        if (this.state.board[i][j][0].color === companyToBeTaken) {
+          gameBoard[i][j][0].color = companyToTakeMerger;
+          companyToTakeMergerSize ++;
+          companyToBeTakenSize --;
+        }
+      }
+    }
+    gameBoard[this.state.col][this.state.row][0].color = companyToTakeMerger
+    companyToTakeMergerSize ++
+    this.setState({
+      board: gameBoard,
+      companiesToMerge: []
+    })
+    this.updateCompanySize(companyToTakeMerger, companyToTakeMergerSize)
+    this.resetCompanySize(companyToBeTaken, companyToBeTakenSize)
+    this.checkForLooseTiles(this.state.col, this.state.row, 1)
+  }
+
+  merge3() {
+
+  }
+
+  merge4() {
+
+  }
 
   // merge(col, row) {
   //   let gameBoard = this.state.board
@@ -710,6 +823,13 @@ class Home extends Component {
 
       <section className="mainView">
         <header className="mainViewHeader"> 
+          <button onClick={this.getRandomTile}>Start Game!</button>
+          <div className='visibleTiles'>{this.state.tileOneName}</div>
+          <div className='visibleTiles'>{this.state.tileTwoName}</div>
+          <div className='visibleTiles'>{this.state.tileThreeName}</div>
+          <div className='visibleTiles'>{this.state.tileFourName}</div>
+          <div className='visibleTiles'>{this.state.tileFiveName}</div>
+          <div className='visibleTiles'>{this.state.tileSixName}</div>
         </header>
 
         <section className="gameGrid">
@@ -741,9 +861,9 @@ class Home extends Component {
             <section className="gameGridInner">
               <div className="gameRow">
                   <div onClick={ () => this.placeTile(0, 0)} className={'gameColumn' + this.state.board[0][0][0].color}>A1</div>
-                  <div onClick={ () => this.placeTile(0, 1)} className={'gameColumn' + this.state.board[0][1][0].color}>A1</div>
-                  <div onClick={ () => this.placeTile(0, 2)} className={'gameColumn' + this.state.board[0][2][0].color}>A1</div>
-                  <div onClick={ () => this.placeTile(0, 3)} className={'gameColumn' + this.state.board[0][3][0].color}>A1</div>
+                  <div onClick={ () => this.placeTile(0, 1)} className={'gameColumn' + this.state.board[0][1][0].color}>A2</div>
+                  <div onClick={ () => this.placeTile(0, 2)} className={'gameColumn' + this.state.board[0][2][0].color}>A3</div>
+                  <div onClick={ () => this.placeTile(0, 3)} className={'gameColumn' + this.state.board[0][3][0].color}>A4</div>
                   <div onClick={ () => this.placeTile(0, 4)} className={'gameColumn' + this.state.board[0][4][0].color}>A1</div>
                   <div onClick={ () => this.placeTile(0, 5)} className={'gameColumn' + this.state.board[0][5][0].color}>A1</div>
                   <div onClick={ () => this.placeTile(0, 6)} className={'gameColumn' + this.state.board[0][6][0].color}>A1</div>
@@ -754,8 +874,8 @@ class Home extends Component {
                   <div onClick={ () => this.placeTile(0, 11)} className={'gameColumn' + this.state.board[0][11][0].color}>A1</div>
               </div>
               <div className="gameRow">
-                  <div onClick={ () => this.placeTile(1, 0)} className={'gameColumn' + this.state.board[1][0][0].color}>A1</div>
-                  <div onClick={ () => this.placeTile(1, 1)} className={'gameColumn' + this.state.board[1][1][0].color}>A1</div>
+                  <div onClick={ () => this.placeTile(1, 0)} className={'gameColumn' + this.state.board[1][0][0].color}>B1</div>
+                  <div onClick={ () => this.placeTile(1, 1)} className={'gameColumn' + this.state.board[1][1][0].color}>B2</div>
                   <div onClick={ () => this.placeTile(1, 2)} className={'gameColumn' + this.state.board[1][2][0].color}>A1</div>
                   <div onClick={ () => this.placeTile(1, 3)} className={'gameColumn' + this.state.board[1][3][0].color}>A1</div>
                   <div onClick={ () => this.placeTile(1, 4)} className={'gameColumn' + this.state.board[1][4][0].color}>A1</div>
