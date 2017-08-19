@@ -719,6 +719,7 @@ class Home extends Component {
     let gameBoard = this.state.board;
     let location = this.state.board;
     let playerStock = this.state.playerStock;
+    let companyStatus = this.state.companyStatus
     let companyName = ''
     location[col][row][0].color = this.state.colorInput
     location[col][row][0].isCompany = true
@@ -728,6 +729,7 @@ class Home extends Component {
       if (playerStock[i].color === this.state.colorInput) {
         playerStock[i].amount ++;
         companyName = playerStock[i].name
+        companyStatus[i].active = true
       }
     }
     alert(`Congratulations on creating ${companyName}. You have been awarded 1 share for your efforts.`)
@@ -737,7 +739,8 @@ class Home extends Component {
       colorInput: '',
       selectedCompany: '',
       companySelectZIndex: 1,
-      playerStock: playerStock
+      playerStock: playerStock,
+      companyStatus: companyStatus
     })
     this.checkForLooseTiles(col, row, 2)
   }
@@ -989,48 +992,6 @@ class Home extends Component {
   buyStock() {
 
   }
-
-  // merge(col, row) {
-  //   let gameBoard = this.state.board
-  //   const cells = []
-    
-  //   function isValidCell(col, row) {
-  //     let color = gameBoard[col][row][0].color
-  //     return color !== 'Taken' && color !== 'clear' && cells.indexOf([col,row])
-  //   }
-
-    
-  //   const checkAdjacentCells = (col, row) => {
-
-  //     let neighbors = [
-  //     ]
-
-  //     if (col < 8) {
-        
-  //       if (isValidCell(col+1, row)) {
-  //         neighbors.push([col+1,row])
-  //       }
-  //     }
-  //     if (col > 0) {
-  //       let color = gameBoard[col-1][row][0].color
-  //       if (isValidCell(color)) {
-  //         neighbors.push([col-1,row])
-  //       }
-  //     }
-  //     if (row < 8) {
-  //       let color = gameBoard[col][row+1][0].color
-  //       if (isValidCell(color)) {
-  //         neighbors.push([col,row+1])
-  //       }
-  //     }
-  //     if (col > 0) {
-  //       let color = gameBoard[col][row-1][0].color
-  //       if (isValidCell(color)) {
-  //         neighbors.push([col,row-1])
-  //       }
-  //     }
-  //   }
-  // }
 
   render() {
     console.log(this.state)
