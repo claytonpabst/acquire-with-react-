@@ -387,8 +387,98 @@ class Home extends Component {
       sizePurple: 0,
       companiesToMerge: [],
       timeToMerge: false,
-      mergeZIndex: 1
+      mergeZIndex: 1,
+      playerCash: 15000,
+      playerStock: [
+        {
+          name: 'Facecrook',
+          color: 'Blue',
+          amount: 0
+        },
+        {
+          name: 'Union Atlantic Railroad',
+          color: 'Red',
+          amount: 0
+        },
+        {
+          name: 'Crump Tower Inc.',
+          color: 'Orange',
+          amount: 0
+        },
+        {
+          name: 'Booze Cruise Inc.',
+          color: 'Yellow',
+          amount: 0
+        },
+        {
+          name: 'Chevwrong Oil',
+          color: 'Purple',
+          amount: 0
+        },
+        {
+          name: 'Hamilton Hotels',
+          color: 'Green',
+          amount: 0
+        },
+        {
+          name: 'Outel',
+          color: 'Teal',
+          amount: 0
+        }
+      ],
+      companyStatus: [
+        {
+          name: 'Facecrook',
+          color: 'Blue',
+          amount: 0,
+          active: false
+        },
+        {
+          name: 'Union Atlantic Railroad',
+          color: 'Red',
+          amount: 0,
+          active: false
+        },
+        {
+          name: 'Crump Tower Inc.',
+          color: 'Orange',
+          amount: 0,
+          active: false
+        },
+        {
+          name: 'Booze Cruise Inc.',
+          color: 'Yellow',
+          amount: 0,
+          active: false
+        },
+        {
+          name: 'Chevwrong Oil',
+          color: 'Purple',
+          amount: 0,
+          active: false
+        },
+        {
+          name: 'Hamilton Hotels',
+          color: 'Green',
+          amount: 0,
+          active: false
+        },
+        {
+          name: 'Outel',
+          color: 'Teal',
+          amount: 0,
+          active: false
+        }
+      ],
     }
+
+              //     <option value="Blue">Facecrook</option>
+              // <option value="Red">Union Atlantic Railroad</option>
+              // <option value='Orange'>Crump Tower Inc.</option>
+              // <option value='Yellow'>Booze Cruise Inc.</option>
+              // <option value='Purple'>Chevwrong Oil</option>
+              // <option value='Green'>Hamilton Hotels</option>
+              // <option value='Teal'>Outel</option>
 
     this.placeTile = this.placeTile.bind(this);
     this.createCompany = this.createCompany.bind(this);
@@ -405,8 +495,71 @@ class Home extends Component {
     this.merge4 = this.merge4.bind(this);
     this.getRandomTile = this.getRandomTile.bind(this);
     this.splicePlayerTile = this.splicePlayerTile.bind(this);
+    this.checkIfMoveIsLegal = this.checkIfMoveIsLegal.bind(this);
+    this.buyStock = this.buyStock.bind(this);
   }
 
+  checkIfMoveIsLegal(col, row) {
+    let uniqueOver10 = 0
+    let unique = [];
+    let mergerArr = []
+    let gameBoard = this.state.board
+
+    function isValidCell(color) {
+      return color !== 'Taken' && color !== 'clear';
+    }
+    
+    if (col < 8) {
+      let color = gameBoard[col+1][row][0].color
+      if (isValidCell(color)) {
+        mergerArr.push(color)
+      }
+    }
+    if (col > 0) {
+      let color = gameBoard[col-1][row][0].color
+      if (isValidCell(color)) {
+        mergerArr.push(color)
+      }
+    }
+    if (row < 11) {
+      let color = gameBoard[col][row+1][0].color
+      if (isValidCell(color)) {
+        mergerArr.push(color)
+      }
+    }
+    if (row > 0) {
+      let color = gameBoard[col][row-1][0].color
+      if (isValidCell(color)) {
+        mergerArr.push(color)
+      }
+    }
+
+    for (let i = 0; i < mergerArr.length; i++) {
+      if (!unique.includes(mergerArr[i])) {
+        unique.push(mergerArr[i])
+      }
+    }
+    if (unique.length > 1){
+      for (let i = 0; i < unique.length; i++) {
+        if (unique[i] === 'Blue' && this.state.sizeBlue > 10) {
+          uniqueOver10 ++
+        } if (unique[i] === 'Green' && this.state.sizeGreen > 10) {
+          uniqueOver10 ++
+        } if (unique[i] === 'Yellow' && this.state.sizeYellow > 10) {
+          uniqueOver10 ++
+        } if (unique[i] === 'Orange' && this.state.sizeOrange > 10) {
+          uniqueOver10 ++
+        } if (unique[i] === 'Purple' && this.state.sizePurple > 10) {
+          uniqueOver10 ++
+        } if (unique[i] === 'Red' && this.state.sizeRed > 10) {
+          uniqueOver10 ++
+        } if (unique[i] === 'Teal' && this.state.sizeTeal > 10) {
+          uniqueOver10 ++
+        }
+      }  
+    }
+    return uniqueOver10 > 1
+  }
   
   getRandomTile() {
     let availableTiles = this.state.availableTiles
@@ -454,69 +607,73 @@ class Home extends Component {
     //   (col === playerTiles[4][0] && row === playerTiles[4][1]) ||
     //   (col === playerTiles[5][0] && row === playerTiles[5][1]) 
     //   ) {
-        if (this.state.board[col][row][0].color === 'clear') {
-          location[col][row][0].color = 'Taken'
-          this.setState({
-            board: location,
-            col: col,
-            row: row
-          })
-        this.splicePlayerTile(col, row)
+        if (!this.checkIfMoveIsLegal(col, row)){
+          if (this.state.board[col][row][0].color === 'clear') {
+            location[col][row][0].color = 'Taken'
+            this.setState({
+              board: location,
+              col: col,
+              row: row
+            })
+          // this.splicePlayerTile(col, row)
+          } else {
+            alert('Click an available location where you have the corresponding tile to place your tile.')
+          }
+          if (this.checkForMerger(col, row)) {
+            return
+          } else { /* check for add to company */
+            if (col < 8 && gameBoard[col+1][row][0].isCompany === true) {
+              this.addToCompany(col, row, colPlus, row)
+              return
+            }
+            if (col > 0 && gameBoard[col-1][row][0].isCompany === true) {
+              this.addToCompany(col, row, colMinus, row)
+              return
+            }
+            if (row < 11 && gameBoard[col][row+1][0].isCompany === true) {
+              this.addToCompany(col, row, col, rowPlus)
+              return
+            }
+            if (row > 0 && gameBoard[col][row-1][0].isCompany === true) {
+              this.addToCompany(col, row, col, rowMinus)
+              return
+            }
+            if (col < 8 && gameBoard[col+1][row][0].color === 'Taken') {
+              this.setState({
+                newCol: colPlus,
+                newRow: row,
+                taken: true,
+                companySelectZIndex: 3
+              })
+            }
+            if (col > 0 && gameBoard[col-1][row][0].color === 'Taken') {
+              this.setState({
+                newCol: colMinus,
+                newRow: row,
+                taken: true,
+                companySelectZIndex: 3
+              })
+            }
+            if (row < 11 && gameBoard[col][row+1][0].color === 'Taken') {
+              this.setState({
+                newCol: col,
+                newRow: rowPlus,
+                taken: true,
+                companySelectZIndex: 3
+              })
+            }
+            if (row > 0 && gameBoard[col][row-1][0].color === 'Taken') {
+              this.setState({
+                newCol: col,
+                newRow: rowMinus,
+                taken: true,
+                companySelectZIndex: 3
+              })
+            }
+          }
         } else {
-          alert('Click an available location where you have the corresponding tile to place your tile.')
-        }
-        if (this.checkForMerger(col, row)) {
-          return
-        } else { /* check for add to company */
-          if (col < 8 && gameBoard[col+1][row][0].isCompany === true) {
-            this.addToCompany(col, row, colPlus, row)
-            return
-          }
-          if (col > 0 && gameBoard[col-1][row][0].isCompany === true) {
-            this.addToCompany(col, row, colMinus, row)
-            return
-          }
-          if (row < 11 && gameBoard[col][row+1][0].isCompany === true) {
-            this.addToCompany(col, row, col, rowPlus)
-            return
-          }
-          if (row > 0 && gameBoard[col][row-1][0].isCompany === true) {
-            this.addToCompany(col, row, col, rowMinus)
-            return
-          }
-          if (col < 8 && gameBoard[col+1][row][0].color === 'Taken') {
-            this.setState({
-              newCol: colPlus,
-              newRow: row,
-              taken: true,
-              companySelectZIndex: 3
-            })
-          }
-          if (col > 0 && gameBoard[col-1][row][0].color === 'Taken') {
-            this.setState({
-              newCol: colMinus,
-              newRow: row,
-              taken: true,
-              companySelectZIndex: 3
-            })
-          }
-          if (row < 11 && gameBoard[col][row+1][0].color === 'Taken') {
-            this.setState({
-              newCol: col,
-              newRow: rowPlus,
-              taken: true,
-              companySelectZIndex: 3
-            })
-          }
-          if (row > 0 && gameBoard[col][row-1][0].color === 'Taken') {
-            this.setState({
-              newCol: col,
-              newRow: rowMinus,
-              taken: true,
-              companySelectZIndex: 3
-            })
-          }
-        }  
+          alert('Two companies over 11 tiles each are not able to merge, try another tile.')
+        } 
     //   } else {
     //     alert('Click an available location where you have the corresponding tile to place your tile.')
     //   }
@@ -561,16 +718,26 @@ class Home extends Component {
   createCompany(col, row, newCol, newRow) {
     let gameBoard = this.state.board;
     let location = this.state.board;
+    let playerStock = this.state.playerStock;
+    let companyName = ''
     location[col][row][0].color = this.state.colorInput
     location[col][row][0].isCompany = true
     location[newCol][newRow][0].color = this.state.colorInput
     location[newCol][newRow][0].isCompany = true
+    for (let i = 0; i < this.state.playerStock.length; i++) {
+      if (playerStock[i].color === this.state.colorInput) {
+        playerStock[i].amount ++;
+        companyName = playerStock[i].name
+      }
+    }
+    alert(`Congratulations on creating ${companyName}. You have been awarded 1 share for your efforts.`)
     this.setState({
       board: location,
       taken: false,
       colorInput: '',
       selectedCompany: '',
-      companySelectZIndex: 1
+      companySelectZIndex: 1,
+      playerStock: playerStock
     })
     this.checkForLooseTiles(col, row, 2)
   }
@@ -819,6 +986,10 @@ class Home extends Component {
 
   }
 
+  buyStock() {
+
+  }
+
   // merge(col, row) {
   //   let gameBoard = this.state.board
   //   const cells = []
@@ -875,6 +1046,7 @@ class Home extends Component {
           <div className='visibleTiles'>{this.state.tileFourName}</div>
           <div className='visibleTiles'>{this.state.tileFiveName}</div>
           <div className='visibleTiles'>{this.state.tileSixName}</div>
+          <button onClick={this.buyStock}>Buy Stock</button>
         </header>
 
         <section className="gameGrid">
