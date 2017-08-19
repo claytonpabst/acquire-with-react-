@@ -404,6 +404,7 @@ class Home extends Component {
     this.merge3 = this.merge3.bind(this);
     this.merge4 = this.merge4.bind(this);
     this.getRandomTile = this.getRandomTile.bind(this);
+    this.splicePlayerTile = this.splicePlayerTile.bind(this);
   }
 
   
@@ -444,15 +445,15 @@ class Home extends Component {
     let gameBoard = this.state.board;
     let location = this.state.board;
     let playerTiles = this.state.playerTiles
-    if (playerTiles.length > 1) {
-      console.log(playerTiles)
-      if ((col === playerTiles[0][0] && row === playerTiles[0][1]) ||
-      (col === playerTiles[1][0] && row === playerTiles[1][1]) ||
-      (col === playerTiles[2][0] && row === playerTiles[2][1]) ||
-      (col === playerTiles[3][0] && row === playerTiles[3][1]) ||
-      (col === playerTiles[4][0] && row === playerTiles[4][1]) ||
-      (col === playerTiles[5][0] && row === playerTiles[5][1]) 
-      ) {
+    // if (playerTiles.length > 1) {
+    //   console.log(playerTiles)
+    //   if ((col === playerTiles[0][0] && row === playerTiles[0][1]) ||
+    //   (col === playerTiles[1][0] && row === playerTiles[1][1]) ||
+    //   (col === playerTiles[2][0] && row === playerTiles[2][1]) ||
+    //   (col === playerTiles[3][0] && row === playerTiles[3][1]) ||
+    //   (col === playerTiles[4][0] && row === playerTiles[4][1]) ||
+    //   (col === playerTiles[5][0] && row === playerTiles[5][1]) 
+    //   ) {
         if (this.state.board[col][row][0].color === 'clear') {
           location[col][row][0].color = 'Taken'
           this.setState({
@@ -460,12 +461,13 @@ class Home extends Component {
             col: col,
             row: row
           })
+        this.splicePlayerTile(col, row)
         } else {
           alert('Click an available location where you have the corresponding tile to place your tile.')
         }
         if (this.checkForMerger(col, row)) {
           return
-        } else {
+        } else { /* check for add to company */
           if (col < 8 && gameBoard[col+1][row][0].isCompany === true) {
             this.addToCompany(col, row, colPlus, row)
             return
@@ -515,10 +517,39 @@ class Home extends Component {
             })
           }
         }  
-      } else {
-        alert('Click an available location where you have the corresponding tile to place your tile.')
-      }
+    //   } else {
+    //     alert('Click an available location where you have the corresponding tile to place your tile.')
+    //   }
+    // } else {
+    //   alert("Click 'start game' to begin.")
+    // }
+  }
+
+  splicePlayerTile(col, row) {
+    let tileToSplice = [...this.state.playerTiles]
+    if (col === this.state.playerTiles[0][0] && row === this.state.playerTiles[0][1]) {
+      tileToSplice.splice(0, 1)
     }
+    if (col === this.state.playerTiles[1][0] && row === this.state.playerTiles[1][1]) {
+      tileToSplice.splice(1, 1)
+    }
+    if (col === this.state.playerTiles[2][0] && row === this.state.playerTiles[2][1]) {
+      tileToSplice.splice(2, 1)
+    }
+    if (col === this.state.playerTiles[3][0] && row === this.state.playerTiles[3][1]) {
+      tileToSplice.splice(3, 1)
+    }
+    if (col === this.state.playerTiles[4][0] && row === this.state.playerTiles[4][1]) {
+      tileToSplice.splice(4, 1)
+    }
+    if (col === this.state.playerTiles[5][0] && row === this.state.playerTiles[5][1]) {
+      tileToSplice.splice(5, 1)
+    }
+      this.setState({
+        playerTiles: tileToSplice
+      }, () => {
+        this.getRandomTile()
+      })
   }
 
   handleColor(e) {
