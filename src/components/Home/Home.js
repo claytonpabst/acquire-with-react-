@@ -470,6 +470,9 @@ class Home extends Component {
           active: false
         }
       ],
+      stepInTurn: 'Place Tile',
+      buyStockZIndex: -1,
+      buyStockSelectedCompany: ''
     }
 
               //     <option value="Blue">Facecrook</option>
@@ -497,6 +500,9 @@ class Home extends Component {
     this.splicePlayerTile = this.splicePlayerTile.bind(this);
     this.checkIfMoveIsLegal = this.checkIfMoveIsLegal.bind(this);
     this.buyStock = this.buyStock.bind(this);
+    this.endTurn = this.endTurn.bind(this);
+    this.handleBuyStockCompanySelect = this.handleBuyStockCompanySelect.bind(this);
+
   }
 
   checkIfMoveIsLegal(col, row) {
@@ -598,87 +604,92 @@ class Home extends Component {
     let gameBoard = this.state.board;
     let location = this.state.board;
     let playerTiles = this.state.playerTiles
-    // if (playerTiles.length > 1) {
-    //   console.log(playerTiles)
-    //   if ((col === playerTiles[0][0] && row === playerTiles[0][1]) ||
-    //   (col === playerTiles[1][0] && row === playerTiles[1][1]) ||
-    //   (col === playerTiles[2][0] && row === playerTiles[2][1]) ||
-    //   (col === playerTiles[3][0] && row === playerTiles[3][1]) ||
-    //   (col === playerTiles[4][0] && row === playerTiles[4][1]) ||
-    //   (col === playerTiles[5][0] && row === playerTiles[5][1]) 
-    //   ) {
-        if (!this.checkIfMoveIsLegal(col, row)){
-          if (this.state.board[col][row][0].color === 'clear') {
-            location[col][row][0].color = 'Taken'
-            this.setState({
-              board: location,
-              col: col,
-              row: row
-            })
-          // this.splicePlayerTile(col, row)
+    // if (this.state.stepInTurn === 'Place Tile') {
+      // if (playerTiles.length > 1) {
+      //   console.log(playerTiles)
+      //   if ((col === playerTiles[0][0] && row === playerTiles[0][1]) ||
+      //   (col === playerTiles[1][0] && row === playerTiles[1][1]) ||
+      //   (col === playerTiles[2][0] && row === playerTiles[2][1]) ||
+      //   (col === playerTiles[3][0] && row === playerTiles[3][1]) ||
+      //   (col === playerTiles[4][0] && row === playerTiles[4][1]) ||
+      //   (col === playerTiles[5][0] && row === playerTiles[5][1]) 
+      //   ) {
+          if (!this.checkIfMoveIsLegal(col, row)){
+            if (this.state.board[col][row][0].color === 'clear') {
+              location[col][row][0].color = 'Taken'
+              this.setState({
+                board: location,
+                col: col,
+                row: row,
+                stepInTurn: 'Buy Stock'
+              })
+            // this.splicePlayerTile(col, row)
+            } else {
+              alert('Click an available location where you have the corresponding tile to place your tile.')
+            }
+            if (this.checkForMerger(col, row)) {
+              return
+            } else { /* check for add to company */
+              if (col < 8 && gameBoard[col+1][row][0].isCompany === true) {
+                this.addToCompany(col, row, colPlus, row)
+                return
+              }
+              if (col > 0 && gameBoard[col-1][row][0].isCompany === true) {
+                this.addToCompany(col, row, colMinus, row)
+                return
+              }
+              if (row < 11 && gameBoard[col][row+1][0].isCompany === true) {
+                this.addToCompany(col, row, col, rowPlus)
+                return
+              }
+              if (row > 0 && gameBoard[col][row-1][0].isCompany === true) {
+                this.addToCompany(col, row, col, rowMinus)
+                return
+              }
+              if (col < 8 && gameBoard[col+1][row][0].color === 'Taken') {
+                this.setState({
+                  newCol: colPlus,
+                  newRow: row,
+                  taken: true,
+                  companySelectZIndex: 3
+                })
+              }
+              if (col > 0 && gameBoard[col-1][row][0].color === 'Taken') {
+                this.setState({
+                  newCol: colMinus,
+                  newRow: row,
+                  taken: true,
+                  companySelectZIndex: 3
+                })
+              }
+              if (row < 11 && gameBoard[col][row+1][0].color === 'Taken') {
+                this.setState({
+                  newCol: col,
+                  newRow: rowPlus,
+                  taken: true,
+                  companySelectZIndex: 3
+                })
+              }
+              if (row > 0 && gameBoard[col][row-1][0].color === 'Taken') {
+                this.setState({
+                  newCol: col,
+                  newRow: rowMinus,
+                  taken: true,
+                  companySelectZIndex: 3
+                })
+              }
+            }
           } else {
-            alert('Click an available location where you have the corresponding tile to place your tile.')
-          }
-          if (this.checkForMerger(col, row)) {
-            return
-          } else { /* check for add to company */
-            if (col < 8 && gameBoard[col+1][row][0].isCompany === true) {
-              this.addToCompany(col, row, colPlus, row)
-              return
-            }
-            if (col > 0 && gameBoard[col-1][row][0].isCompany === true) {
-              this.addToCompany(col, row, colMinus, row)
-              return
-            }
-            if (row < 11 && gameBoard[col][row+1][0].isCompany === true) {
-              this.addToCompany(col, row, col, rowPlus)
-              return
-            }
-            if (row > 0 && gameBoard[col][row-1][0].isCompany === true) {
-              this.addToCompany(col, row, col, rowMinus)
-              return
-            }
-            if (col < 8 && gameBoard[col+1][row][0].color === 'Taken') {
-              this.setState({
-                newCol: colPlus,
-                newRow: row,
-                taken: true,
-                companySelectZIndex: 3
-              })
-            }
-            if (col > 0 && gameBoard[col-1][row][0].color === 'Taken') {
-              this.setState({
-                newCol: colMinus,
-                newRow: row,
-                taken: true,
-                companySelectZIndex: 3
-              })
-            }
-            if (row < 11 && gameBoard[col][row+1][0].color === 'Taken') {
-              this.setState({
-                newCol: col,
-                newRow: rowPlus,
-                taken: true,
-                companySelectZIndex: 3
-              })
-            }
-            if (row > 0 && gameBoard[col][row-1][0].color === 'Taken') {
-              this.setState({
-                newCol: col,
-                newRow: rowMinus,
-                taken: true,
-                companySelectZIndex: 3
-              })
-            }
-          }
-        } else {
-          alert('Two companies over 11 tiles each are not able to merge, try another tile.')
-        } 
-    //   } else {
-    //     alert('Click an available location where you have the corresponding tile to place your tile.')
-    //   }
+            alert('Two companies over 11 tiles each are not able to merge, try another tile.')
+          } 
+      //   } else {
+      //     alert('Click an available location where you have the corresponding tile to place your tile.')
+      //   }
+      // } else {
+      //   alert("Click 'start game' to begin.")
+      // }
     // } else {
-    //   alert("Click 'start game' to begin.")
+    //   alert("You must wait until next turn to place another tile.")
     // }
   }
 
@@ -749,8 +760,13 @@ class Home extends Component {
     this.setState({
       selectedCompany: val,
       colorInput: val
+    }) 
+  }
+
+  handleBuyStockCompanySelect(val) {
+    this.setState({
+      buyStockSelectedCompany: val
     })
-    
   }
 
   updateCompanySize(currentCompany, num) {
@@ -877,6 +893,9 @@ class Home extends Component {
       count ++
     }
     this.updateCompanySize(gameBoard[col][row][0].color, count)
+    this.setState({
+      stepInTurn: 'Buy Stock'
+    })
   }
 
   checkForMerger(col, row) {
@@ -990,6 +1009,17 @@ class Home extends Component {
   }
 
   buyStock() {
+    if (this.state.stepInTurn === 'Buy Stock') {
+      this.setState({
+        buyStockZIndex: 2
+      })
+      alert('Lets buy some stock')
+    } else {
+      alert('Not today, sucka!')
+    }
+  }
+
+  endTurn() {
 
   }
 
@@ -1008,6 +1038,22 @@ class Home extends Component {
           <div className='visibleTiles'>{this.state.tileFiveName}</div>
           <div className='visibleTiles'>{this.state.tileSixName}</div>
           <button onClick={this.buyStock}>Buy Stock</button>
+          <button onClick={this.endTurn}>End Turn</button>
+          <h2>Cash on hand:</h2>
+          <h2>${this.state.playerCash.toLocaleString()}.00</h2>
+
+          <section className='buyStock' style={{zIndex: this.state.buyStockZIndex}}>
+            <select onChange={(e) => this.handleBuyStockCompanySelect(e.target.value)}
+                    value={this.state.buyStockSelectedCompany}>
+              <option value=''>Select a company</option>
+              {this.state.companyStatus.map((company, i) =>{
+                if(company.active === true) {
+                  return  <option key={i} value={company.color}>{company.name} ({company.color})</option>
+                }
+              })}
+
+            </select>
+          </section>
         </header>
 
         <section className="gameGrid">
@@ -1017,13 +1063,18 @@ class Home extends Component {
                     style={{display: this.state.taken ? 'block' : 'none'}} 
                     onChange={(e) => this.updateSelectedCompany(e.target.value)}>
               <option value=''>Select a company</option>
-              <option value="Blue">Facecrook</option>
-              <option value="Red">Union Atlantic Railroad</option>
-              <option value='Orange'>Crump Tower Inc.</option>
-              <option value='Yellow'>Booze Cruise Inc.</option>
-              <option value='Purple'>Chevwrong Oil</option>
-              <option value='Green'>Hamilton Hotels</option>
-              <option value='Teal'>Outel</option>
+              {this.state.companyStatus.map((company, i) =>{
+                if(company.active === false) {
+                  return <option key={i} value={company.color}>{company.name} ({company.color})</option>
+                }
+              })}
+              {/*<option value="Blue">Facecrook (Blue)</option>
+              <option value="Red">Union Atlantic Railroad (Red)</option>
+              <option value='Orange'>Crump Tower Inc. (Orange)</option>
+              <option value='Yellow'>Booze Cruise Inc. (Yellow)</option>
+              <option value='Purple'>Chevwrong Oil (Purple)</option>
+              <option value='Green'>Hamilton Hotels (Green)</option>
+              <option value='Teal'>Outel (Teal)</option>*/}
             </select>
             <button style={{display: this.state.colorInput !== '' ? 'block' : 'none'}} 
                     onClick={ () => this.createCompany(this.state.col, this.state.row, this.state.newCol, this.state.newRow)}>create
@@ -1035,6 +1086,7 @@ class Home extends Component {
             <button onClick={ () => this.merge(this.state.col, this.state.row)}>create
             </button>
           </section>
+            <h5 className='gameTitle'>HIGH TIDE STOCK TIME</h5>
 
             <section className="gameGridInner">
               <div className="gameRow">
