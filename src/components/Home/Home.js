@@ -430,49 +430,50 @@ class Home extends Component {
         {
           name: 'Facecrook',
           color: 'Blue',
-          amount: 0,
+          size: 0,
           active: false
         },
         {
           name: 'Union Atlantic Railroad',
           color: 'Red',
-          amount: 0,
+          size: 0,
           active: false
         },
         {
           name: 'Crump Tower Inc.',
           color: 'Orange',
-          amount: 0,
+          size: 0,
           active: false
         },
         {
           name: 'Booze Cruise Inc.',
           color: 'Yellow',
-          amount: 0,
+          size: 0,
           active: false
         },
         {
           name: 'Chevwrong Oil',
           color: 'Purple',
-          amount: 0,
+          size: 0,
           active: false
         },
         {
           name: 'Hamilton Hotels',
           color: 'Green',
-          amount: 0,
+          size: 0,
           active: false
         },
         {
           name: 'Outel',
           color: 'Teal',
-          amount: 0,
+          size: 0,
           active: false
         }
       ],
       stepInTurn: 'Place Tile',
       buyStockZIndex: -1,
-      buyStockSelectedCompany: ''
+      buyStockSelectedCompany: '',
+      amountOfStockToBuy: 1
     }
 
               //     <option value="Blue">Facecrook</option>
@@ -502,6 +503,9 @@ class Home extends Component {
     this.buyStock = this.buyStock.bind(this);
     this.endTurn = this.endTurn.bind(this);
     this.handleBuyStockCompanySelect = this.handleBuyStockCompanySelect.bind(this);
+    this.handleAmountOfStockToBuy = this.handleAmountOfStockToBuy.bind(this);
+    this.cancelBuyStockBox = this.cancelBuyStockBox.bind(this); 
+    this.completeTransaction = this.completeTransaction.bind(this);
 
   }
 
@@ -769,82 +773,107 @@ class Home extends Component {
     })
   }
 
+  handleAmountOfStockToBuy(val) {
+    let numberedVal = parseInt(val)
+    this.setState({
+      amountOfStockToBuy: numberedVal
+    })
+  }
+
   updateCompanySize(currentCompany, num) {
-    // console.log(currentCompany, num)
-    if (currentCompany === 'Blue') {
-      this.setState({
-        sizeBlue: this.state.sizeBlue + num
-      })
+    let company = [...this.state.companyStatus]
+    for(let i=0; i<this.state.companyStatus.length; i++) {
+      if(company[i].color === currentCompany) {
+        company[i].size = company[i].size + num
+      }
     }
-    if (currentCompany === 'Red') {
-      this.setState({
-        sizeRed: this.state.sizeRed + num
-      })
-    }
-    if (currentCompany === 'Yellow') {
-      this.setState({
-        sizeYellow: this.state.sizeYellow + num
-      })
-    }
-    if (currentCompany === 'Green') {
-      this.setState({
-        sizeGreen: this.state.sizeGreen + num
-      })
-    }
-    if (currentCompany === 'Orange') {
-      this.setState({
-        sizeOrange: this.state.sizeOrange + num
-      })
-    }
-    if (currentCompany === 'Purple') {
-      this.setState({
-        sizePurple: this.state.sizePurple + num
-      })
-    }
-    if (currentCompany === 'Teal') {
-      this.setState({
-        sizeTeal: this.state.sizeTeal + num
-      })
-    }
+    this.setState({
+      companyStatus: company
+    }, () => {
+      if (currentCompany === 'Blue') {
+        this.setState({
+          sizeBlue: this.state.sizeBlue + num
+        })
+      }
+      if (currentCompany === 'Red') {
+        this.setState({
+          sizeRed: this.state.sizeRed + num
+        })
+      }
+      if (currentCompany === 'Yellow') {
+        this.setState({
+          sizeYellow: this.state.sizeYellow + num
+        })
+      }
+      if (currentCompany === 'Green') {
+        this.setState({
+          sizeGreen: this.state.sizeGreen + num
+        })
+      }
+      if (currentCompany === 'Orange') {
+        this.setState({
+          sizeOrange: this.state.sizeOrange + num
+        })
+      }
+      if (currentCompany === 'Purple') {
+        this.setState({
+          sizePurple: this.state.sizePurple + num
+        })
+      }
+      if (currentCompany === 'Teal') {
+        this.setState({
+          sizeTeal: this.state.sizeTeal + num
+        })
+      }
+    })  
   }
 
   resetCompanySize(currentCompany, num) {
-    // console.log(currentCompany, num)
-    if (currentCompany === 'Blue') {
-      this.setState({
-        sizeBlue: this.state.sizeBlue + num
-      })
+    let company = [...this.state.companyStatus]
+    for(let i=0; i<this.state.companyStatus.length; i++) {
+      if(company[i].color === currentCompany) {
+        company[i].size = company[i].size - num
+      }
     }
-    if (currentCompany === 'Red') {
-      this.setState({
-        sizeRed: this.state.sizeRed + num
-      })
-    }
-    if (currentCompany === 'Yellow') {
-      this.setState({
-        sizeYellow: this.state.sizeYellow + num
-      })
-    }
-    if (currentCompany === 'Green') {
-      this.setState({
-        sizeGreen: this.state.sizeGreen + num
-      })
-    }
-    if (currentCompany === 'Orange') {
-      this.setState({
-        sizeOrange: this.state.sizeOrange + num
-      })
-    }
-    if (currentCompany === 'Purple') {
-      this.setState({
-        sizePurple: this.state.sizePurple + num
-      })
-    }
-    if (currentCompany === 'Teal') {
-      this.setState({
-        sizeTeal: this.state.sizeTeal + num
-      })
-    }
+    this.setState({
+      companyStatus: company
+    }, () => {
+      if (currentCompany === 'Blue') {
+        this.setState({
+          sizeBlue: this.state.sizeBlue - num
+        })
+      }
+      if (currentCompany === 'Red') {
+        this.setState({
+          sizeRed: this.state.sizeRed - num
+        })
+      }
+      if (currentCompany === 'Yellow') {
+        this.setState({
+          sizeYellow: this.state.sizeYellow - num
+        })
+      }
+      if (currentCompany === 'Green') {
+        this.setState({
+          sizeGreen: this.state.sizeGreen - num
+        })
+      }
+      if (currentCompany === 'Orange') {
+        this.setState({
+          sizeOrange: this.state.sizeOrange - num
+        })
+      }
+      if (currentCompany === 'Purple') {
+        this.setState({
+          sizePurple: this.state.sizePurple - num
+        })
+      }
+      if (currentCompany === 'Teal') {
+        this.setState({
+          sizeTeal: this.state.sizeTeal - num
+        })
+      }
+    })
   }
 
   addToCompany(col, row, newCol, newRow) {
@@ -985,19 +1014,21 @@ class Home extends Component {
         if (this.state.board[i][j][0].color === companyToBeTaken) {
           gameBoard[i][j][0].color = companyToTakeMerger;
           companyToTakeMergerSize ++;
-          companyToBeTakenSize --;
+          companyToBeTakenSize ++;
         }
       }
     }
     gameBoard[this.state.col][this.state.row][0].color = companyToTakeMerger
     companyToTakeMergerSize ++
+    console.log(companyToBeTakenSize)
+    console.log(companyToTakeMergerSize)
     this.setState({
       board: gameBoard,
       companiesToMerge: []
     })
     this.updateCompanySize(companyToTakeMerger, companyToTakeMergerSize)
     this.resetCompanySize(companyToBeTaken, companyToBeTakenSize)
-    this.checkForLooseTiles(this.state.col, this.state.row, 1)
+    setTimeout(() => {this.checkForLooseTiles(this.state.col, this.state.row, 0)}, 20)
   }
 
   merge3() {
@@ -1013,10 +1044,36 @@ class Home extends Component {
       this.setState({
         buyStockZIndex: 2
       })
-      alert('Lets buy some stock')
     } else {
-      alert('Not today, sucka!')
+      alert('Think you can just buy up the market without contributing? Pshhhh. Place a tile then try again.')
     }
+  }
+
+  completeTransaction() {
+    let stock = this.state.buyStockSelectedCompany
+    let amountToBuy = this.state.amountOfStockToBuy
+    let company = this.state.companyStatus
+    let playerStock = this.state.playerStock
+    let playerCash = this.state.playerCash
+    for (let i=0; i < playerStock.length; i++) {
+      if (playerStock[i].color === stock) {
+        playerStock[i].amount = playerStock[i].amount + amountToBuy;
+        playerCash = playerCash - ((amountToBuy * company[i].size) * 100)
+      }
+    }
+    this.setState({
+      playerStock: playerStock,
+      playerCash: playerCash,
+      buyStockZIndex: -1,
+      amountOfStockToBuy: 1
+    })
+  }
+
+  cancelBuyStockBox() {
+    this.setState({
+      buyStockZIndex: -1,
+      amountOfStockToBuy: 1
+    })
   }
 
   endTurn() {
@@ -1043,6 +1100,7 @@ class Home extends Component {
           <h2>${this.state.playerCash.toLocaleString()}.00</h2>
 
           <section className='buyStock' style={{zIndex: this.state.buyStockZIndex}}>
+            <h1>Select a company to purchase their stock!</h1>
             <select onChange={(e) => this.handleBuyStockCompanySelect(e.target.value)}
                     value={this.state.buyStockSelectedCompany}>
               <option value=''>Select a company</option>
@@ -1051,8 +1109,16 @@ class Home extends Component {
                   return  <option key={i} value={company.color}>{company.name} ({company.color})</option>
                 }
               })}
-
             </select>
+            <h1>Select the amount of shares to purchase</h1>
+            <select onChange={(e) => this.handleAmountOfStockToBuy(e.target.value)}
+                    value={this.state.amountOfStockToBuy}>
+              <option value={1}>1 share</option>
+              <option value={2}>2 shares</option>
+              <option value={3}>3 shares</option>
+            </select>
+            <button onClick={this.completeTransaction}>Complete Transaction</button>
+            <button onClick={this.cancelBuyStockBox}>Cancel</button>
           </section>
         </header>
 
