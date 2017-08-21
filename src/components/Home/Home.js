@@ -1021,16 +1021,22 @@ class Home extends Component {
     gameBoard[this.state.col][this.state.row][0].color = companyToTakeMerger
     companyToTakeMergerSize ++
     let companyStatus = this.state.companyStatus;
+    let playerStock = this.state.playerStock;
     let playerCash = this.state.playerCash;
     for (let i=0; i < companyStatus.length; i++) {
       if (companyStatus[i].color === companyToBeTaken) {
         companyStatus[i].active = false;
+        playerCash = playerCash + ((playerStock[i].amount * companyStatus[i].size) * 100)
+        playerStock[i].amount = 0;
       }
     }
+
     this.setState({
       board: gameBoard,
       companiesToMerge: [],
-      companyStatus: companyStatus
+      companyStatus: companyStatus,
+      playerCash: playerCash,
+      playerStock: playerStock
     })
     this.updateCompanySize(companyToTakeMerger, companyToTakeMergerSize)
     this.resetCompanySize(companyToBeTaken, companyToBeTakenSize)
@@ -1116,7 +1122,7 @@ class Home extends Component {
               <option value=''>Select a company</option>
               {this.state.companyStatus.map((company, i) =>{
                 if(company.active === true) {
-                  return  <option key={i} value={company.color}>{company.name} ({company.color})</option>
+                  return  <option key={i} value={company.color}>{company.name} ({company.color}) ${(company.size * 100)}/share</option>
                 }
               })}
             </select>
