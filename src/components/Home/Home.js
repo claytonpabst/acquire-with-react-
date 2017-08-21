@@ -1168,7 +1168,7 @@ class Home extends Component {
             <button onClick={ () => this.merge(this.state.col, this.state.row)}>create
             </button>
           </section>
-            <h5 className='gameTitle'>HIGH TIDE STOCK TIME</h5>
+            <h5 className='gameTitle'>!HIGH TIDE!</h5>
 
             <section className="gameGridInner">
               <div className="gameRow">
