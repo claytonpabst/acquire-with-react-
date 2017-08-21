@@ -1003,7 +1003,6 @@ class Home extends Component {
   }
 
   merge2() {
-    console.log('merge2 hit')
     let gameBoard = this.state.board;
     let companyToTakeMerger = this.state.companiesToMerge[0][0];
     let companyToTakeMergerSize = 0
@@ -1018,6 +1017,11 @@ class Home extends Component {
         }
       }
     }
+    // if (companyToBeTakenSize === companyToTakeMergerSize) {
+    //   this.setState({
+    //     sameSizeMergeBoxZIndex: 3
+    //   })
+    // }
     gameBoard[this.state.col][this.state.row][0].color = companyToTakeMerger
     companyToTakeMergerSize ++
     let companyStatus = this.state.companyStatus;
@@ -1112,7 +1116,7 @@ class Home extends Component {
           <h2>Cash on hand:</h2>
           <h2>${this.state.playerCash.toLocaleString()}.00</h2>
           {this.state.playerStock.map((company, i) => {
-            return <h1 key={i}>{company.color}: {company.amount}</h1>
+            return <h1 key={i}>{company.name} ({company.color}): {company.amount}</h1>
           })}
 
           <section className='buyStock' style={{zIndex: this.state.buyStockZIndex}}>
