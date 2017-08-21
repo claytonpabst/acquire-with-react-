@@ -17,9 +17,10 @@
 .mainViewHeader {
     width: 35vw;
     height: 100vh;
-    background: #159293;
+    background: linear-gradient(to bottom right, #1b119e, #31dae0);
     border: .5px solid black;
     position: relative;
+
 }
 
 .gameTitle {
@@ -39,7 +40,7 @@
 .gameGrid {
     width: 65vw;
     height: 100vh;
-    background: lightblue;
+    background: linear-gradient(to bottom right, #4d177a, #31dae0);
     display: flex;
     position: relative;
     border: .5px solid black;
@@ -51,7 +52,7 @@
     height: 70%;
     top: 10%;
     left: 5%;
-    background: orange;
+    background: linear-gradient(to bottom right, #31dae0, #4d177a);
     /*margin: auto;*/
     display: flex;
     flex-direction: column;
@@ -65,7 +66,7 @@
     height: 70%;
     top: 10%;
     left: 5%;
-    background: orange;
+    background: linear-gradient(to bottom right, #31dae0, #4d177a);
     /*margin: auto;*/
     display: flex;
     flex-direction: column;
@@ -79,7 +80,7 @@
     height: 70%;
     top: 10%;
     left: 5%;
-    background: orange;
+    background: linear-gradient(to bottom right, #31dae0, #4d177a);
     /*margin: auto;*/
     display: flex;
     flex-direction: column;
@@ -120,6 +121,7 @@
     font-size: 12px;
     font-weight: 700;
     opacity: .5;
+    box-shadow: inset -7px -7px 20px 2px rgba(79,79,79,1);
 }
 
 .gameColumnclear:hover {
@@ -137,6 +139,7 @@
     font-size: 12px;
     font-weight: 700;
     opacity: .9;
+    box-shadow: inset -7px -7px 20px 2px rgba(150,150,150,1);
 }
 
 .gameColumnBlue {
@@ -144,12 +147,13 @@
     width: 8.33%;
     justify-content: center;
     align-items: center;
-    background: blue;
+    background: #2462ff;
     border: .5px solid gray;
     display: flex;
     font-size: 12px;
     font-weight: 700;
     opacity: .9;
+    box-shadow: inset -7px -7px 20px 2px rgba(0,46,161,1);
 }
 
 .gameColumnRed {
@@ -157,12 +161,13 @@
     width: 8.33%;
     justify-content: center;
     align-items: center;
-    background: red;
+    background: #ff4133;
     border: .5px solid gray;
     display: flex;
     font-size: 12px;
     font-weight: 700;
     opacity: .9;
+    box-shadow: inset -7px -7px 20px 2px rgba(194,13,0,1);
 }
 
 .gameColumnOrange {
@@ -170,12 +175,13 @@
     width: 8.33%;
     justify-content: center;
     align-items: center;
-    background: orange;
+    background: #ff7d26;
     border: .5px solid gray;
     display: flex;
     font-size: 12px;
     font-weight: 700;
     opacity: .9;
+    box-shadow: inset -7px -7px 20px 2px rgba(191,97,34,1);
 }
 
 .gameColumnYellow {
@@ -183,12 +189,13 @@
     width: 8.33%;
     justify-content: center;
     align-items: center;
-    background: yellow;
+    background: #f0fa61;
     border: .5px solid gray;
     display: flex;
     font-size: 12px;
     font-weight: 700;
     opacity: .9;
+    box-shadow: inset -7px -7px 20px 2px rgba(179,179,65,1);
 }
 
 .gameColumnPurple {
@@ -196,12 +203,13 @@
     width: 8.33%;
     justify-content: center;
     align-items: center;
-    background: purple;
+    background: #cd4ee0;
     border: .5px solid gray;
     display: flex;
     font-size: 12px;
     font-weight: 700;
     opacity: .9;
+    box-shadow: inset -7px -7px 20px 2px rgba(134,11,153,1);
 }
 
 .gameColumnTeal {
@@ -209,12 +217,13 @@
     width: 8.33%;
     justify-content: center;
     align-items: center;
-    background: teal;
+    background: #31dae0;
     border: .5px solid gray;
     display: flex;
     font-size: 12px;
     font-weight: 700;
     opacity: .9;
+    box-shadow: inset -7px -7px 20px 2px rgba(0,167,173,1);
 }
 
 .gameColumnGreen {
@@ -222,29 +231,31 @@
     width: 8.33%;
     justify-content: center;
     align-items: center;
-    background: green;
+    background: #32d132;
     border: .5px solid gray;
     display: flex;
     font-size: 12px;
     font-weight: 700;
     opacity: .9;
+    box-shadow: inset -7px -7px 20px 2px rgba(11,161,61,1);
 }
 
 .visibleTiles {
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     background: white;
     border: 1px solid black;
     display: flex;
     justify-content: center;
     align-items: center;
+    box-shadow: inset -7px -7px 20px 4px rgba(199,199,199,1);
 }
 
 .buyStock {
     position: absolute;
     width: 60%;
     height: 25%;
-    background: lightgreen;
+    background: linear-gradient(to bottom right, #31dae0, #4d177a);
     right: 5px;
     bottom: 5px;
     /*z-index: -1;*/
