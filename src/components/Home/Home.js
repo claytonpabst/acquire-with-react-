@@ -873,7 +873,7 @@ class Home extends Component {
           sizeTeal: this.state.sizeTeal - num
         })
       }
-    })
+    })  
   }
 
   addToCompany(col, row, newCol, newRow) {
@@ -1020,14 +1020,21 @@ class Home extends Component {
     }
     gameBoard[this.state.col][this.state.row][0].color = companyToTakeMerger
     companyToTakeMergerSize ++
-    console.log(companyToBeTakenSize)
-    console.log(companyToTakeMergerSize)
+    let companyStatus = this.state.companyStatus;
+    let playerCash = this.state.playerCash;
+    for (let i=0; i < companyStatus.length; i++) {
+      if (companyStatus[i].color === companyToBeTaken) {
+        companyStatus[i].active = false;
+      }
+    }
     this.setState({
       board: gameBoard,
-      companiesToMerge: []
+      companiesToMerge: [],
+      companyStatus: companyStatus
     })
     this.updateCompanySize(companyToTakeMerger, companyToTakeMergerSize)
     this.resetCompanySize(companyToBeTaken, companyToBeTakenSize)
+    // this.checkForLooseTiles(this.state.col, this.state.row, 0)
     setTimeout(() => {this.checkForLooseTiles(this.state.col, this.state.row, 0)}, 20)
   }
 
@@ -1098,6 +1105,9 @@ class Home extends Component {
           <button onClick={this.endTurn}>End Turn</button>
           <h2>Cash on hand:</h2>
           <h2>${this.state.playerCash.toLocaleString()}.00</h2>
+          {this.state.playerStock.map((company, i) => {
+            return <h1 key={i}>{company.color}: {company.amount}</h1>
+          })}
 
           <section className='buyStock' style={{zIndex: this.state.buyStockZIndex}}>
             <h1>Select a company to purchase their stock!</h1>
