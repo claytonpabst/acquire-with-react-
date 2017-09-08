@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {Link} from 'react-router-dom';
 
 import './Home.css';
 
@@ -608,16 +609,18 @@ class Home extends Component {
     let gameBoard = this.state.board;
     let location = this.state.board;
     let playerTiles = this.state.playerTiles
-    // if (this.state.stepInTurn === 'Place Tile') {
-      // if (playerTiles.length > 1) {
-      //   console.log(playerTiles)
-      //   if ((col === playerTiles[0][0] && row === playerTiles[0][1]) ||
-      //   (col === playerTiles[1][0] && row === playerTiles[1][1]) ||
-      //   (col === playerTiles[2][0] && row === playerTiles[2][1]) ||
-      //   (col === playerTiles[3][0] && row === playerTiles[3][1]) ||
-      //   (col === playerTiles[4][0] && row === playerTiles[4][1]) ||
-      //   (col === playerTiles[5][0] && row === playerTiles[5][1]) 
-      //   ) {
+    //-------------------------------------------to dev comment out below
+    if (this.state.stepInTurn === 'Place Tile') {
+      if (playerTiles.length > 1) {
+        console.log(playerTiles)
+        if ((col === playerTiles[0][0] && row === playerTiles[0][1]) ||
+        (col === playerTiles[1][0] && row === playerTiles[1][1]) ||
+        (col === playerTiles[2][0] && row === playerTiles[2][1]) ||
+        (col === playerTiles[3][0] && row === playerTiles[3][1]) ||
+        (col === playerTiles[4][0] && row === playerTiles[4][1]) ||
+        (col === playerTiles[5][0] && row === playerTiles[5][1]) 
+        ) {
+    //-------------------------------------------break comment
           if (!this.checkIfMoveIsLegal(col, row)){
             if (this.state.board[col][row][0].color === 'clear') {
               location[col][row][0].color = 'Taken'
@@ -627,7 +630,9 @@ class Home extends Component {
                 row: row,
                 stepInTurn: 'Buy Stock'
               })
-            // this.splicePlayerTile(col, row)
+    //-------------------------------------------to dev comment out below
+            this.splicePlayerTile(col, row)
+    //-------------------------------------------break comment
             } else {
               alert('Click an available location where you have the corresponding tile to place your tile.')
             }
@@ -686,15 +691,17 @@ class Home extends Component {
           } else {
             alert('Two companies over 11 tiles each are not able to merge, try another tile.')
           } 
-      //   } else {
-      //     alert('Click an available location where you have the corresponding tile to place your tile.')
-      //   }
-      // } else {
-      //   alert("Click 'start game' to begin.")
-      // }
-    // } else {
-    //   alert("You must wait until next turn to place another tile.")
-    // }
+          //-----------------------------------to dev comment out below
+        } else {
+          alert('Click an available location where you have the corresponding tile to place your tile.')
+        }
+      } else {
+        alert("Click 'start game' to begin.")
+      }
+    } else {
+      alert("You must wait until next turn to place another tile.")
+    }
+    //-------------------------------------break comment
   }
 
   splicePlayerTile(col, row) {
@@ -1094,15 +1101,28 @@ class Home extends Component {
   }
 
   endTurn() {
-
+    this.setState({
+      stepInTurn: 'Place Tile'
+    })
   }
+
+  // componentDidMount() {
+  //   console.log(this.props)
+  // }
 
   render() {
     console.log(this.state)
     return (
+
       // <div className="home">
 
       <section className="mainView">
+      {/*{
+    this.state.companyStatus.map((item, i) => {
+        let URL = `/detailedView/${item.name}`
+        return <Link to={URL}>{item.name}</Link>
+    })
+    }*/}
         <header className="mainViewHeader"> 
           <button onClick={this.getRandomTile}>Start Game!</button>
           <div className='visibleTiles'>{this.state.tileOneName}</div>
@@ -1111,6 +1131,7 @@ class Home extends Component {
           <div className='visibleTiles'>{this.state.tileFourName}</div>
           <div className='visibleTiles'>{this.state.tileFiveName}</div>
           <div className='visibleTiles'>{this.state.tileSixName}</div>
+          <h2 style={{"color":"white"}}>{this.state.stepInTurn}</h2>
           <button onClick={this.buyStock}>Buy Stock</button>
           <button onClick={this.endTurn}>End Turn</button>
           <h2>Cash on hand:</h2>

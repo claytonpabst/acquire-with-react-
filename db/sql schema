@@ -1,0 +1,30 @@
+-- This is the acquire app
+
+-- create table users(
+--     user_ID serial PRIMARY KEY unique,
+--     userName text
+-- )
+
+-- create table passwords(
+--     id serial primary key,
+--     user_ID integer not null,
+--     foreign key (user_ID) REFERENCES users(user_ID),
+--     user_password text not null
+-- )
+
+-- drop table passwords
+
+-- with new_user as (
+--     insert into users
+--     (user_ID, userName)
+--     values 
+--     (default, 'testUser')
+--     returning user_ID
+-- )
+
+-- INSERT into passwords (user_ID, user_password) values ((select user_ID from new_user), 'passwordtest');
+
+
+
+select * from users
+inner join passwords on passwords.user_ID = users.user_ID
